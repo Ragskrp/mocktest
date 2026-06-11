@@ -192,9 +192,9 @@ export default function TestWizardPage({ params }: PageProps) {
     await updateDoc(doc(db, 'attempts', attemptId), {
       xpEarned: increment(baseXP)
     });
-    await updateDoc(doc(db, 'users', user.uid), {
+    await setDoc(doc(db, 'users', user.uid), {
       xpTotal: increment(baseXP)
-    });
+    }, { merge: true });
 
     if (isCorrect) {
       confetti({
@@ -264,10 +264,10 @@ export default function TestWizardPage({ params }: PageProps) {
         xpEarned: increment(25)
       });
 
-      await updateDoc(doc(db, 'users', user.uid), {
+      await setDoc(doc(db, 'users', user.uid), {
         xpTotal: increment(25),
         currentStreak: increment(1)
-      });
+      }, { merge: true });
       setSessionStreak(prev => prev + 1);
 
       confetti({
@@ -283,9 +283,9 @@ export default function TestWizardPage({ params }: PageProps) {
       setBookworkCheckResult('FAIL');
 
       // Reset streak
-      await updateDoc(doc(db, 'users', user.uid), {
+      await setDoc(doc(db, 'users', user.uid), {
         currentStreak: 0
-      });
+      }, { merge: true });
       setSessionStreak(0);
 
       setTimeout(() => {
