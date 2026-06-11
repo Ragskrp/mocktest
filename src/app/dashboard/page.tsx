@@ -47,6 +47,17 @@ export default function StudentDashboard() {
           }
         } catch (err) {
           console.error('Error fetching profile:', err);
+          // If Firestore is offline or blocked, provide a client-side fallback
+          setProfile({
+            displayName: user.displayName || 'Explorer',
+            email: user.email || '',
+            role: 'student',
+            yearGroup: 10,
+            xpTotal: 0,
+            level: 1,
+            currentStreak: 0,
+            longestStreak: 0
+          });
         } finally {
           setLoading(false);
         }
@@ -293,7 +304,7 @@ export default function StudentDashboard() {
                 </div>
 
                 <button
-                  onClick={() => alert(`Starting ${sub.name} Test (Implemented in Phase 2)`)}
+                  onClick={() => router.push(`/test/${sub.code.toLowerCase()}`)}
                   className="w-full py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-white hover:border-white/20 transition flex items-center justify-center gap-2 group"
                 >
                   Launch Test 

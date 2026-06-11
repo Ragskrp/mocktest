@@ -1,6 +1,6 @@
-import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getAuth, connectAuthEmulator } from 'firebase/auth';
-import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
+import { getApp, getApps, initializeApp } from 'firebase/app';
+import { connectAuthEmulator, getAuth } from 'firebase/auth';
+import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -11,28 +11,24 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Initialize Firebase
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
-const auth = getAuth(app);
-const db = getFirestore(app);
+const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 
-// Use Emulators only when explicitly enabled in environment variables.
-// This prevents auth calls from trying to use localhost:9099 when the emulator is not running.
-if (process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === 'true') {
-  // Check if we already connected to emulator in this hot-reload instance
-  // (Avoids re-binding errors in development hot reloads)
-  const isServer = typeof window === 'undefined';
-  const isEmulator = !isServer && (window as any)._firebase_emulator_connected;
-  if (!isEmulator && !isServer) {
-    try {
-      connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: true });
-      connectFirestoreEmulator(db, 'localhost', 8080);
-      (window as any)._firebase_emulator_connected = true;
-      console.log('Firebase Emulators connected successfully.');
-    } catch (err) {
-      console.warn('Failed to connect to Firebase Emulators:', err);
-    }
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+
+type EmulatorWindow = Window & {
+  __SPARK_FIREBASE_EMULATORS_CONNECTED__?: boolean;
+};
+
+if (
+  typeof window !== 'undefined' &&
+  process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === 'true'
+) {
+  const emulatorWindow = window as EmulatorWindow;
+
+  if (!emulatorWindow.__SPARK_FIREBASE_EMULATORS_CONNECTED__) {
+    connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
+    connectFirestoreEmulator(db, '127.0.0.1', 8080);
+    emulatorWindow.__SPARK_FIREBASE_EMULATORS_CONNECTED__ = true;
   }
 }
-
-export { app, auth, db };

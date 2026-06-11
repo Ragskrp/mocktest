@@ -86,3 +86,17 @@ h1, h2, h3, h4, h5, h6 {
     background-position: 550px 550px, 390px 410px, 380px 520px;
   }
 }
+
+/* JSXGraph board styles */
+.jxgbox {
+  position: relative;
+  overflow: hidden;
+  background-color: #1a1a2e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
+}
+.jxgbox svg {
+  width: 100%;
+  height: 100%;
+}
+
