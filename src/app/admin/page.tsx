@@ -95,7 +95,7 @@ export default function AdminPage() {
     fileReader.onload = async (event) => {
       const typedarray = new Uint8Array(event.target?.result as ArrayBuffer);
       try {
-        const loadingTask = pdfjsLib.getDocument(typedarray);
+        const loadingTask = pdfjsLib.getDocument({ data: typedarray });
         const pdf = await loadingTask.promise;
         setPdfDoc(pdf);
         setNumPages(pdf.numPages);
