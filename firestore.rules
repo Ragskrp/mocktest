@@ -1,0 +1,38 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Questions: anyone authenticated can read; only admins can write
+    match /questions/{qId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null 
+                   && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // Mock tests: authenticated read; teacher/admin write
+    match /mock_tests/{tId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null 
+                   && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['teacher', 'admin'];
+    }
+
+    // Users: read own data; write own data (except role — only admin can set role)
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow update: if request.auth != null && request.auth.uid == userId 
+                    && !('role' in request.resource.data.diff(resource.data).affectedKeys());
+      allow create: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Attempts: students read/write only their own; teachers can read their class
+    match /attempts/{attemptId} {
+      allow read, write: if request.auth != null && (resource == null || request.auth.uid == resource.data.userId || request.resource.data.userId == request.auth.uid);
+      allow read: if request.auth != null 
+                   && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['teacher', 'admin'];
+    }
+
+    match /attempts/{attemptId}/answers/{qId} {
+      allow read, write: if request.auth != null && request.auth.uid == get(/databases/$(database)/documents/attempts/$(attemptId)).data.userId;
+    }
+  }
+}

@@ -1,0 +1,88 @@
+@import "tailwindcss";
+
+@theme {
+  --color-space-navy: #0F0E1A;
+  --color-card-plum: #1E1B33;
+  --color-electric-violet: #7C3AED;
+  --color-neon-coral: #F97316;
+  --color-cyber-cyan: #06B6D4;
+  --color-lime-zap: #84CC16;
+  --color-soft-white: #F1F0FF;
+  --color-lavender-grey: #9CA3C0;
+
+  --font-nunito: var(--font-nunito), sans-serif;
+  --font-inter: var(--font-inter), sans-serif;
+}
+
+:root {
+  --background: #0F0E1A;
+  --foreground: #F1F0FF;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  overflow-x: hidden;
+  font-family: var(--font-inter);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-nunito);
+}
+
+/* Custom interactive styling and glows */
+.glow-purple {
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.15);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.glow-purple:hover {
+  box-shadow: 0 0 25px rgba(124, 58, 237, 0.3);
+  transform: translateY(-2px);
+}
+
+.glow-cyan {
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.15);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.glow-cyan:hover {
+  box-shadow: 0 0 25px rgba(6, 182, 212, 0.3);
+  transform: translateY(-2px);
+}
+
+.glow-coral {
+  box-shadow: 0 0 20px rgba(249, 115, 22, 0.15);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.glow-coral:hover {
+  box-shadow: 0 0 25px rgba(249, 115, 22, 0.3);
+  transform: translateY(-2px);
+}
+
+.glow-lime {
+  box-shadow: 0 0 20px rgba(132, 204, 22, 0.15);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.glow-lime:hover {
+  box-shadow: 0 0 25px rgba(132, 204, 22, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Animated Space background pattern */
+.space-bg {
+  background-image: 
+    radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+    radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
+    radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px);
+  background-size: 550px 550px, 350px 350px, 250px 250px;
+  background-position: 0 0, 40px 60px, 130px 270px;
+  animation: space-drift 120s linear infinite;
+}
+
+@keyframes space-drift {
+  from {
+    background-position: 0 0, 40px 60px, 130px 270px;
+  }
+  to {
+    background-position: 550px 550px, 390px 410px, 380px 520px;
+  }
+}
